@@ -316,7 +316,7 @@ router.get("/callback", async (req, res) => {
     // IMPORTANT: save session before redirect
     req.session.save(() => {
       // ✅ Redirect back to frontend
-      res.redirect("http://localhost:3000/admin/github/login");
+      res.redirect("http://localhost:3000/admin/github/login?login=success");
     });
   } catch (error) {
     console.error(error);
