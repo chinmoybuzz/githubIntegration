@@ -255,11 +255,49 @@ router.get("/login", (req, res) => {
 });
 
 // Step 2: The Callback (The "Brain" of the operation)
+//update It for session store in server and redirection
+// router.get("/callback", async (req, res) => {
+//   const code = req.query.code;
+
+//   try {
+//     // 1. Exchange code for Token
+//     const tokenResponse = await axios.post(
+//       "https://github.com/login/oauth/access_token",
+//       {
+//         client_id: process.env.GITHUB_CLIENT_ID,
+//         client_secret: process.env.GITHUB_CLIENT_SECRET,
+//         code,
+//       },
+//       { headers: { Accept: "application/json" } },
+//     );
+
+//     const accessToken = tokenResponse.data.access_token;
+
+//     // 2. SAVE TOKEN TO SESSION (Crucial Step)
+//     req.session.githubToken = accessToken;
+
+//     // 3. Fetch ALL Repos (The 40 repos fix)
+//     const repoUrl = `https://api.github.com/user/repos?per_page=100&visibility=all&affiliation=owner,collaborator`;
+
+//     const repoDetails = await axios.get(repoUrl, {
+//       headers: { Authorization: `Bearer ${accessToken}` },
+//     });
+
+//     // 4. Send the list, but NOT the token
+//     res.json({
+//       message: "Authenticated successfully!",
+//       total: repoDetails.data.length,
+//       // repos: repoList,
+//     });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).send("Login failed.");
+//   }
+// });
 router.get("/callback", async (req, res) => {
   const code = req.query.code;
 
   try {
-    // 1. Exchange code for Token
     const tokenResponse = await axios.post(
       "https://github.com/login/oauth/access_token",
       {
@@ -272,28 +310,19 @@ router.get("/callback", async (req, res) => {
 
     const accessToken = tokenResponse.data.access_token;
 
-    // 2. SAVE TOKEN TO SESSION (Crucial Step)
+    // ✅ Save token in session
     req.session.githubToken = accessToken;
 
-    // 3. Fetch ALL Repos (The 40 repos fix)
-    const repoUrl = `https://api.github.com/user/repos?per_page=100&visibility=all&affiliation=owner,collaborator`;
-
-    const repoDetails = await axios.get(repoUrl, {
-      headers: { Authorization: `Bearer ${accessToken}` },
-    });
-
-    // 4. Send the list, but NOT the token
-    res.json({
-      message: "Authenticated successfully!",
-      total: repoDetails.data.length,
-      // repos: repoList,
+    // IMPORTANT: save session before redirect
+    req.session.save(() => {
+      // ✅ Redirect back to frontend
+      res.redirect("http://localhost:3000/admin/github/login");
     });
   } catch (error) {
     console.error(error);
     res.status(500).send("Login failed.");
   }
 });
-
 // Step 3: A Protected Route (Example of how to use the session later)
 router.get("/my-repos", async (req, res) => {
   if (!req.session.githubToken) {
