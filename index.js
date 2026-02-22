@@ -14,7 +14,7 @@ const app = express();
 // );
 app.use(
   cors({
-    origin: ["http://localhost:3000"], // frontend origin
+    origin: ["http://localhost:3000", "https://easy-resume-123.netlify.app/"], // frontend origin
     credentials: true,
     methods: ["GET", "POST", "OPTIONS"], // allowed HTTP methods
   }),
