@@ -6,8 +6,12 @@ const session = require("express-session");
 const githubRoutes = require("./routes/github");
 const testRoutes = require("./routes/test.route");
 const app = express();
-
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:3000", // frontend origin
+    credentials: true,
+  })
+);
 app.use(express.json());
 
 app.use(
