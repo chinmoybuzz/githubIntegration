@@ -20,16 +20,16 @@ app.use(
   }),
 );
 app.use(express.json());
-
+app.set("trust proxy", 1);
 app.use(
   session({
     secret: process.env.SESSION_SECRET, // Use a strong secret in .env
     resave: false,
     saveUninitialized: true,
     cookie: {
-      secure: false, // Set to true if using HTTPS
+      secure: true, // Set to true if using HTTPS
       httpOnly: true, // Prevents frontend JS from stealing the session cookie
-      sameSite: "lax", // allows OAuth redirect from GitHub
+      sameSite: "none", // allows OAuth redirect from GitHub
       maxAge: 3600000, // 1 hour
     },
   }),
