@@ -6,11 +6,18 @@ const session = require("express-session");
 const githubRoutes = require("./routes/github");
 const testRoutes = require("./routes/test.route");
 const app = express();
+// app.use(
+//   cors({
+//     // origin: "http://localhost:3000", // frontend origin
+//     credentials: true,
+//   }),
+// );
 app.use(
   cors({
-    origin: "http://localhost:3000", // frontend origin
+    origin: ["http://localhost:3000"], // frontend origin
     credentials: true,
-  })
+    methods: ["GET", "POST", "OPTIONS"], // allowed HTTP methods
+  }),
 );
 app.use(express.json());
 
@@ -22,6 +29,7 @@ app.use(
     cookie: {
       secure: false, // Set to true if using HTTPS
       httpOnly: true, // Prevents frontend JS from stealing the session cookie
+      sameSite: "lax", // allows OAuth redirect from GitHub
       maxAge: 3600000, // 1 hour
     },
   }),

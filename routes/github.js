@@ -312,11 +312,11 @@ router.get("/callback", async (req, res) => {
 
     // ✅ Save token in session
     req.session.githubToken = accessToken;
-
+    console.log("Session token", accessToken, "Session", req.session.githubToken);
     // IMPORTANT: save session before redirect
     req.session.save(() => {
-      // ✅ Redirect back to frontend
-      res.redirect("http://localhost:3000/admin/github/login?login=success");
+      // ✅ Redirect back to frontend (React app)
+      res.redirect("https://easy-resume-123.netlify.app/admin/github/login?login=success");
     });
   } catch (error) {
     console.error(error);
@@ -330,7 +330,7 @@ router.get("/my-repos", async (req, res) => {
   }
 
   try {
-    const response = await axios.get("https://api.github.com/user/repos", {
+    const response = await axios.get("https://api.github.com/user/repos?per_page=100&visibility=all&affiliation=owner,collaborator", {
       headers: { Authorization: `Bearer ${req.session.githubToken}` },
     });
     const repoList = response.data.map((repo) => ({
