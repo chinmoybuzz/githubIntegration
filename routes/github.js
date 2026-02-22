@@ -251,7 +251,7 @@ const router = express.Router();
 // Step 1: Login & Redirect
 router.get("/login", (req, res) => {
   const githubAuthURL = `https://github.com/login/oauth/authorize?client_id=${process.env.GITHUB_CLIENT_ID}&scope=repo user`;
-  res.redirect(githubAuthURL);
+  res.redirect(githubAuthURL); //
 });
 
 // Step 2: The Callback (The "Brain" of the operation)
