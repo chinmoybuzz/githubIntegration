@@ -316,7 +316,8 @@ router.get("/callback", async (req, res) => {
     // IMPORTANT: save session before redirect
     req.session.save(() => {
       // ✅ Redirect back to frontend (React app)
-      res.redirect("https://easy-resume-123.netlify.app/admin/github/login?login=success");
+      // res.redirect("https://easy-resume-123.netlify.app/admin/github/login?login=success");
+      res.redirect("https://easy-resume-123.netlify.app/admin/github/login");
     });
   } catch (error) {
     console.error(error);
